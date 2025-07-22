@@ -30,20 +30,38 @@ export default function BonusCalculator() {
 
   let bonus = (dealAmount * basePercent) / 100
 
-  if (upsell > 0) {
-    const upsellPercent = mode === 'boost' ? 10 : 5
-    bonus += (upsell * upsellPercent) / 100
-  }
+// Upsell Bonus
+if (upsell > 0) {
+  const upsellPercent = mode === 'boost' ? 10 : 5
+  bonus += (upsell * upsellPercent) / 100
+}
 
-  if (retentionMonths >= 12) {
-    const retentionPercent = mode === 'boost' ? 5 : 3
-    bonus += (dealAmount * retentionPercent) / 100
-  }
+// Retention Bonus
+if (retentionMonths >= 12) {
+  const retentionPercent = mode === 'boost' ? 5 : 3
+  bonus += (dealAmount * retentionPercent) / 100
+}
 
-  if (knowledgeTop) {
-    bonus += mode === 'boost' ? 500 : 200
-  }
+// Knowledge Bonus
+if (knowledgeTop) {
+  bonus += mode === 'boost' ? 500 : 200
+}
 
+// Volume Bonus
+if (dealAmount >= 500000) {
+  bonus += dealAmount * (mode === 'boost' ? 0.05 : 0.04)
+} else if (dealAmount >= 400000) {
+  bonus += dealAmount * (mode === 'boost' ? 0.04 : 0.03)
+} else if (dealAmount >= 250000) {
+  bonus += dealAmount * (mode === 'boost' ? 0.03 : 0.02)
+} else if (dealAmount >= 100000) {
+  bonus += dealAmount * (mode === 'boost' ? 0.02 : 0.01)
+}
+
+// Team Builder Bonus (500$ за каждые 3 сделки по $5k+)
+const teamDeals = Math.floor(dealAmount / 5000)
+const teamBuilderBonus = Math.floor(teamDeals / 3) * 500
+bonus += teamBuilderBonus
   const cap = mode === 'boost' ? 0.4 : 0.3
   const maxPayout = dealAmount * cap
 
